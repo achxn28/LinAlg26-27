@@ -1,6 +1,9 @@
 # Matrices as Lists of Lists
 # A simple introduction to handling matrices as lists of lists in Python
 # Patrick Honner 9/21/22
+# I used nested lists to inspect and modify matrices, including selecting rows,
+# columns, and individual entries. I also implemented elementary row operations
+# and used them to reduce both default and custom matrices to RREF.
 
 # Need this to deepcopy lists
 import copy
@@ -110,10 +113,77 @@ def create_custom_matrix():
 
 # Medium Task Part 2: Perform a chosen row operation on the custom matrix
 def medium_task_part_2():
-  custom_matrix = create_custom_matrix()
-  perform_row_operation(custom_matrix)
-  print("Custom matrix after the row operation:")
-  print(tabulate(custom_matrix))
+  # Save the custom list of lists as M so later tasks use this matrix.
+  global M
+  M = create_custom_matrix()
+  perform_row_operation(M)
+  print("Custom matrix saved as current matrix M.")
+
+
+# Hard Task: Put the current matrix M into reduced row echelon form
+def hard_task_rref():
+  global M
+
+  # Step 1: Make a working copy of the current matrix M.
+  rref_matrix = copy.deepcopy(M)
+  number_of_rows = len(rref_matrix)
+  number_of_columns = len(rref_matrix[0])
+  pivot_row = 0
+
+  print("Starting current matrix M:")
+  print(tabulate(rref_matrix))
+
+  # Step 2: Visit columns from left to right to find pivot positions.
+  for pivot_column in range(number_of_columns):
+    # Step 3: Find the first row at or below the pivot row with a nonzero entry.
+    swap_row = pivot_row
+    while swap_row < number_of_rows and rref_matrix[swap_row][pivot_column] == 0:
+      swap_row += 1
+
+    # Step 4: If this column has no pivot, move to the next column.
+    if swap_row == number_of_rows:
+      continue
+
+    # Step 5: Swap the nonzero row into the pivot row, if necessary.
+    if swap_row != pivot_row:
+      rref_matrix[pivot_row], rref_matrix[swap_row] = (
+        rref_matrix[swap_row], rref_matrix[pivot_row]
+      )
+
+    # Step 6: Divide the entire pivot row so its pivot becomes 1.
+    pivot_value = rref_matrix[pivot_row][pivot_column]
+    for column in range(number_of_columns):
+      rref_matrix[pivot_row][column] /= pivot_value
+
+    # Step 7: Use the pivot row to make every other entry in its column zero.
+    for row in range(number_of_rows):
+      if row != pivot_row:
+        factor = rref_matrix[row][pivot_column]
+        for column in range(number_of_columns):
+          rref_matrix[row][column] -= factor * rref_matrix[pivot_row][column]
+
+    # Step 8: Change extremely small rounding errors in any row to 0.
+    for row in range(number_of_rows):
+      for column in range(number_of_columns):
+        if abs(rref_matrix[row][column]) < 0.0000000001:
+          rref_matrix[row][column] = 0
+
+    print(f"Matrix after pivot column {pivot_column + 1}:")
+    print(tabulate(rref_matrix))
+
+    # Step 9: Move down to prepare the next row's pivot.
+    pivot_row += 1
+
+    # Step 10: Stop when every row already has a pivot.
+    if pivot_row == number_of_rows:
+      break
+
+  # Step 11: Save the finished reduced row echelon form as the new M.
+  M = rref_matrix
+
+  # Step 12: Show the finished reduced row echelon form.
+  print("Reduced row echelon form:")
+  print(tabulate(M))
 
 
 # Task Menu: Choose one task at a time, or enter q to exit
@@ -125,6 +195,7 @@ while True:
   print("2: Easy Task Part 2 - Change an entry")
   print("3: Easy Task Part 3 - Row operations on M")
   print("4: Medium Tasks - Custom matrix and row operation")
+  print("5: Hard Task - Reduced row echelon form")
   print("q: Quit")
 
   task_choice = input("Enter your choice: ").lower()
@@ -137,10 +208,12 @@ while True:
     easy_task_part_3()
   elif task_choice == "4":
     medium_task_part_2()
+  elif task_choice == "5":
+    hard_task_rref()
   elif task_choice == "q":
     break
   else:
-    print("Please enter 1, 2, 3, 4, or q.")
+    print("Please enter 1, 2, 3, 4, 5, or q.")
 
 
 
