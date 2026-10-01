@@ -1,9 +1,6 @@
 # Matrices as Lists of Lists
 # A simple introduction to handling matrices as lists of lists in Python
 # Patrick Honner 9/21/22
-# I used nested lists to inspect and modify matrices, including selecting rows,
-# columns, and individual entries. I also implemented elementary row operations
-# and used them to reduce both default and custom matrices to RREF.
 
 # Need this to deepcopy lists
 import copy
