@@ -38,3 +38,33 @@ def print_matrix(A):
 
 print("In a 'matrix' format:")
 print_matrix(d)
+
+# Challenge 1: Determine if a matrix is in row echelon form
+
+def is_row_echelon(A):
+  previous_leading_entry = -1
+  zero_row = False
+
+  for i in range(len(A)):
+    leading_entry = -1
+
+    for j in range(len(A[i])):
+      if A[i][j] != 0:
+        leading_entry = j
+        break
+
+    if leading_entry == -1:
+      zero_row = True
+    else:
+      if zero_row:
+        return False
+      if leading_entry <= previous_leading_entry:
+        return False
+      previous_leading_entry = leading_entry
+
+  return True
+
+if is_row_echelon(d):
+  print("This matrix is in row echelon form.")
+else:
+  print("This matrix is not in row echelon form.")
