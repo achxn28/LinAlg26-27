@@ -118,3 +118,24 @@ def rref(matrix):
 
 print("Reduced row echelon form:")
 print_matrix(rref(d))
+
+
+# Challenge 3: Determine if two matrices are row equivalent
+number_of_rows = int(input("Enter the number of rows in the second matrix: "))
+number_of_columns = int(input("Enter the number of columns in the second matrix: "))
+second_matrix = []
+
+for i in range(number_of_rows):
+  row = input("Enter row " + str(i + 1) + ", separated by commas: ").split(",")
+  for j in range(number_of_columns):
+    row[j] = float(row[j])
+  second_matrix.append(row)
+
+if len(d) != len(second_matrix) or len(d[0]) != len(second_matrix[0]):
+  print("The matrices are not row equivalent.")
+else:
+  rref(second_matrix)
+  if d == second_matrix:
+    print("The matrices are row equivalent.")
+  else:
+    print("The matrices are not row equivalent.")
